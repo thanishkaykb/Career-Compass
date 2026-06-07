@@ -97,15 +97,15 @@ Return ONLY this JSON shape:
 Polish wording into impactful, achievement-oriented bullets but never invent data.`;
 
     const raw = await callAI([{ role: "system", content: system }, { role: "user", content: userPrompt }], { json: true });
-    let resume: Record<string, unknown>;
+    let resume: unknown;
     try { resume = JSON.parse(raw); } catch { throw new Error("AI returned invalid JSON. Try again."); }
 
     const { data: saved, error } = await context.supabase
       .from("resumes")
-      .insert({ user_id: context.userId, title: `${data.fullName} — ${data.targetRole || "Resume"}`, content: resume })
+      .insert({ user_id: context.userId, title: `${data.fullName} — ${data.targetRole || "Resume"}`, content: resume as never })
       .select().single();
     if (error) throw new Error(error.message);
-    return { resume, id: saved.id };
+    return { resume: raw, id: saved.id as string };
   });
 
 const AnalyzeInput = z.object({
