@@ -126,7 +126,7 @@ function AuthPage() {
             <ArrowLeft className="h-4 w-4" /> Back
           </Link>
           <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-primary-foreground display font-bold">C</div>
+            <Logo className="h-8 w-8" />
             <span className="display text-sm font-bold">Career Compass</span>
           </Link>
         </div>
