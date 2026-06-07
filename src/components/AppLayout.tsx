@@ -38,7 +38,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       {/* Desktop header */}
       <header className="hidden md:flex sticky top-0 z-40 glass border-b border-border h-16 items-center px-6 gap-6">
         <Link to="/dashboard" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground display font-bold text-sm">R</div>
+          <Logo className="h-8 w-8" />
           <span className="display font-bold">Career Compass</span>
         </Link>
         <div className="flex-1" />
