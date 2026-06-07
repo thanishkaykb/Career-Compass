@@ -1,13 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
-import { Sparkles, FileText, Search, Briefcase, ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Sparkles, FileText, Search, Briefcase, ArrowRight, User, Building2, X } from "lucide-react";
 import { useAuth } from "@/lib/auth-hooks";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "ResumeAI — Build, Analyze, and Land Your Next Job" },
-      { name: "description", content: "AI-powered resume builder, resume analyzer, and job board. Smarter career tools for seekers and recruiters." },
+      { name: "description", content: "AI-powered resume builder, resume analyzer, and job board." },
     ],
   }),
   component: Landing,
@@ -16,6 +16,8 @@ export const Route = createFileRoute("/")({
 function Landing() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const [chooserOpen, setChooserOpen] = useState(false);
+
   useEffect(() => {
     if (!loading && user) navigate({ to: "/dashboard" });
   }, [user, loading, navigate]);
@@ -27,7 +29,7 @@ function Landing() {
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground display font-bold">R</div>
           <span className="display text-lg font-bold">ResumeAI</span>
         </div>
-        <Link to="/auth" className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90">Sign in</Link>
+        <button onClick={() => setChooserOpen(true)} className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90">Sign in</button>
       </header>
 
       <section className="mx-auto max-w-4xl px-6 py-20 text-center">
@@ -38,13 +40,12 @@ function Landing() {
           Land the job <br /><span className="text-primary">you actually want.</span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground sm:text-lg">
-          Build resumes from your real experience. Analyze them against any posting. Apply in one click. Built for seekers and recruiters.
+          Build resumes from your real experience. Analyze them against any posting. Apply in one click.
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <Link to="/auth" className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90">
-            Get started free <ArrowRight className="h-4 w-4" />
-          </Link>
-          <Link to="/auth" className="rounded-full border border-border bg-surface-1 px-6 py-3 text-sm font-medium hover:bg-surface-2">I'm a recruiter</Link>
+          <button onClick={() => setChooserOpen(true)} className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90">
+            Get started <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
 
         <div className="mt-20 grid gap-4 sm:grid-cols-3">
@@ -63,6 +64,30 @@ function Landing() {
           ))}
         </div>
       </section>
+
+      {chooserOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4" onClick={() => setChooserOpen(false)}>
+          <div className="glass relative w-full max-w-lg rounded-2xl p-8" onClick={(e) => e.stopPropagation()}>
+            <button onClick={() => setChooserOpen(false)} className="absolute right-4 top-4 rounded-full p-1.5 hover:bg-surface-2" aria-label="Close">
+              <X className="h-4 w-4" />
+            </button>
+            <h2 className="display text-2xl font-bold text-center">Who are you?</h2>
+            <p className="mt-2 text-center text-sm text-muted-foreground">Pick how you'll use ResumeAI.</p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <Link to="/auth" search={{ role: "job_seeker" }} className="glass rounded-2xl p-5 text-left hover:border-primary border border-transparent transition">
+                <User className="h-7 w-7 text-primary" />
+                <h3 className="display mt-3 font-bold">Job Seeker</h3>
+                <p className="mt-1 text-xs text-muted-foreground">Build resumes, apply to jobs, track responses.</p>
+              </Link>
+              <Link to="/auth" search={{ role: "recruiter" }} className="glass rounded-2xl p-5 text-left hover:border-primary border border-transparent transition">
+                <Building2 className="h-7 w-7 text-primary" />
+                <h3 className="display mt-3 font-bold">Recruiter / HR</h3>
+                <p className="mt-1 text-xs text-muted-foreground">Post jobs, review applications, hire talent.</p>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
