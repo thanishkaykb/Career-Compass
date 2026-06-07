@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Sparkles, FileText, Search, Briefcase, ArrowRight, User, Building2, X } from "lucide-react";
 import { useAuth } from "@/lib/auth-hooks";
+import { Logo } from "@/components/Logo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,7 +27,7 @@ function Landing() {
     <div className="min-h-screen grid-bg">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground display font-bold">C</div>
+          <Logo className="h-10 w-10" />
           <span className="display text-lg font-bold">Career Compass</span>
         </div>
         <button onClick={() => setChooserOpen(true)} className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90">Sign in</button>

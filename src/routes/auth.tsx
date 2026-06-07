@@ -5,6 +5,7 @@ import { useAuth, type Role } from "@/lib/auth-hooks";
 import { toast } from "sonner";
 import { Mail, Loader2, ArrowLeft, User, Building2 } from "lucide-react";
 import { z } from "zod";
+import { Logo } from "@/components/Logo";
 
 const searchSchema = z.object({
   role: z.enum(["job_seeker", "recruiter"]).optional(),
@@ -33,7 +34,7 @@ function AuthPage() {
   useEffect(() => { if (!authLoading && user) navigate({ to: "/dashboard" }); }, [user, authLoading, navigate]);
 
   const isRecruiter = role === "recruiter";
-  const accent = isRecruiter ? "from-fuchsia-500 to-orange-500" : "from-primary to-cyan-400";
+  const accent = isRecruiter ? "from-fuchsia-700 via-pink-700 to-orange-600" : "from-emerald-700 via-teal-700 to-cyan-700";
   const Icon = isRecruiter ? Building2 : User;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -125,20 +126,20 @@ function AuthPage() {
             <ArrowLeft className="h-4 w-4" /> Back
           </Link>
           <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-primary-foreground display font-bold">C</div>
+            <Logo className="h-8 w-8" />
             <span className="display text-sm font-bold">Career Compass</span>
           </Link>
         </div>
 
         <div className="glass rounded-2xl p-7">
-          <div className={`-mx-7 -mt-7 mb-6 rounded-t-2xl bg-gradient-to-r ${accent} px-7 py-5 text-white`}>
+          <div className={`-mx-7 -mt-7 mb-6 rounded-t-2xl bg-gradient-to-br ${accent} px-7 py-5 text-white shadow-lg`}>
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
-                <Icon className="h-5 w-5" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black/30 ring-1 ring-white/30">
+                <Icon className="h-5 w-5 text-white" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wider opacity-80">{isRecruiter ? "Recruiter / HR" : "Job Seeker"}</p>
-                <h1 className="display text-xl font-bold">{mode === "signup" ? "Create your account" : "Welcome back"}</h1>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 [text-shadow:0_1px_2px_rgba(0,0,0,0.4)]">{isRecruiter ? "Recruiter / HR" : "Job Seeker"}</p>
+                <h1 className="display text-xl font-bold text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.5)]">{mode === "signup" ? "Create your account" : "Welcome back"}</h1>
               </div>
             </div>
           </div>
