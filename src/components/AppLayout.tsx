@@ -51,7 +51,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       {/* Mobile top bar (minimal) */}
       <header className="md:hidden sticky top-0 z-40 glass border-b border-border h-14 flex items-center justify-between px-4">
         <Link to="/dashboard" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground display font-bold text-sm">R</div>
+          <Logo className="h-8 w-8" />
           <span className="display font-bold">Career Compass</span>
         </Link>
         <button onClick={signOut} className="rounded-lg p-2 hover:bg-surface-2 text-muted-foreground">
