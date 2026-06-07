@@ -34,7 +34,7 @@ function AuthPage() {
   useEffect(() => { if (!authLoading && user) navigate({ to: "/dashboard" }); }, [user, authLoading, navigate]);
 
   const isRecruiter = role === "recruiter";
-  const accent = isRecruiter ? "from-fuchsia-500 to-orange-500" : "from-primary to-cyan-400";
+  const accent = isRecruiter ? "from-fuchsia-700 via-pink-700 to-orange-600" : "from-emerald-700 via-teal-700 to-cyan-700";
   const Icon = isRecruiter ? Building2 : User;
 
   const handleSubmit = async (e: React.FormEvent) => {
