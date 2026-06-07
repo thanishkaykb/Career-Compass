@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Sparkles, FileText, Search, Briefcase, ArrowRight, User, Building2, X } from "lucide-react";
 import { useAuth } from "@/lib/auth-hooks";
+import { Logo } from "@/components/Logo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
