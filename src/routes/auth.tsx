@@ -5,6 +5,7 @@ import { useAuth, type Role } from "@/lib/auth-hooks";
 import { toast } from "sonner";
 import { Mail, Loader2, ArrowLeft, User, Building2 } from "lucide-react";
 import { z } from "zod";
+import { Logo } from "@/components/Logo";
 
 const searchSchema = z.object({
   role: z.enum(["job_seeker", "recruiter"]).optional(),
