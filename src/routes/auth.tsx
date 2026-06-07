@@ -132,14 +132,14 @@ function AuthPage() {
         </div>
 
         <div className="glass rounded-2xl p-7">
-          <div className={`-mx-7 -mt-7 mb-6 rounded-t-2xl bg-gradient-to-r ${accent} px-7 py-5 text-white`}>
+          <div className={`-mx-7 -mt-7 mb-6 rounded-t-2xl bg-gradient-to-br ${accent} px-7 py-5 text-white shadow-lg`}>
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
-                <Icon className="h-5 w-5" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-black/30 ring-1 ring-white/30">
+                <Icon className="h-5 w-5 text-white" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wider opacity-80">{isRecruiter ? "Recruiter / HR" : "Job Seeker"}</p>
-                <h1 className="display text-xl font-bold">{mode === "signup" ? "Create your account" : "Welcome back"}</h1>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 [text-shadow:0_1px_2px_rgba(0,0,0,0.4)]">{isRecruiter ? "Recruiter / HR" : "Job Seeker"}</p>
+                <h1 className="display text-xl font-bold text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.5)]">{mode === "signup" ? "Create your account" : "Welcome back"}</h1>
               </div>
             </div>
           </div>
