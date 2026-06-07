@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/auth-hooks";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ResumeAI — Build, Analyze, and Land Your Next Job" },
+      { title: "Career Compass — Build, Analyze, and Land Your Next Job" },
       { name: "description", content: "AI-powered resume builder, resume analyzer, and job board." },
     ],
   }),
@@ -26,8 +26,8 @@ function Landing() {
     <div className="min-h-screen grid-bg">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground display font-bold">R</div>
-          <span className="display text-lg font-bold">ResumeAI</span>
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground display font-bold">C</div>
+          <span className="display text-lg font-bold">Career Compass</span>
         </div>
         <button onClick={() => setChooserOpen(true)} className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90">Sign in</button>
       </header>
@@ -72,7 +72,7 @@ function Landing() {
               <X className="h-4 w-4" />
             </button>
             <h2 className="display text-2xl font-bold text-center">Who are you?</h2>
-            <p className="mt-2 text-center text-sm text-muted-foreground">Pick how you'll use ResumeAI.</p>
+            <p className="mt-2 text-center text-sm text-muted-foreground">Pick how you'll use Career Compass.</p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <Link to="/auth" search={{ role: "job_seeker" }} className="glass rounded-2xl p-5 text-left hover:border-primary border border-transparent transition">
                 <User className="h-7 w-7 text-primary" />
