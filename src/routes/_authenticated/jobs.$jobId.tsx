@@ -76,7 +76,7 @@ function JobDetail() {
         <section className="mt-6"><h2 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">Description</h2><p className="mt-2 text-sm whitespace-pre-line">{job.description}</p></section>
         {job.responsibilities && <section className="mt-4"><h2 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">Responsibilities</h2><p className="mt-2 text-sm whitespace-pre-line">{job.responsibilities}</p></section>}
         {job.requirements && <section className="mt-4"><h2 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">Requirements</h2><p className="mt-2 text-sm whitespace-pre-line">{job.requirements}</p></section>}
-        {job.skills?.length > 0 && (
+        {job.skills && job.skills.length > 0 && (
           <section className="mt-4">
             <h2 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">Skills</h2>
             <div className="mt-2 flex flex-wrap gap-1.5">{job.skills.map((s: string) => <span key={s} className="rounded-full bg-primary/15 text-primary px-2.5 py-1 text-xs">{s}</span>)}</div>
