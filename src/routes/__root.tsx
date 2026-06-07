@@ -45,7 +45,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ResumeAI — Career Intelligence Platform" },
+      { title: "Career Compass — Career Intelligence Platform" },
       { name: "description", content: "Build AI-powered resumes, analyze them against job postings, and apply to jobs in one place." },
     ],
     links: [

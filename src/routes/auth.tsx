@@ -11,7 +11,7 @@ const searchSchema = z.object({
 });
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — ResumeAI" }] }),
+  head: () => ({ meta: [{ title: "Sign in — Career Compass" }] }),
   validateSearch: searchSchema,
   component: AuthPage,
 });
@@ -126,7 +126,7 @@ function AuthPage() {
           </Link>
           <Link to="/" className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-primary-foreground display font-bold">R</div>
-            <span className="display text-sm font-bold">ResumeAI</span>
+            <span className="display text-sm font-bold">Career Compass</span>
           </Link>
         </div>
 

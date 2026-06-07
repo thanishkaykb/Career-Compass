@@ -38,7 +38,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       <header className="hidden md:flex sticky top-0 z-40 glass border-b border-border h-16 items-center px-6 gap-6">
         <Link to="/dashboard" className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground display font-bold text-sm">R</div>
-          <span className="display font-bold">ResumeAI</span>
+          <span className="display font-bold">Career Compass</span>
         </Link>
         <div className="flex-1" />
         <span className="text-xs text-muted-foreground hidden lg:inline">{user?.email}</span>
@@ -51,7 +51,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       <header className="md:hidden sticky top-0 z-40 glass border-b border-border h-14 flex items-center justify-between px-4">
         <Link to="/dashboard" className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground display font-bold text-sm">R</div>
-          <span className="display font-bold">ResumeAI</span>
+          <span className="display font-bold">Career Compass</span>
         </Link>
         <button onClick={signOut} className="rounded-lg p-2 hover:bg-surface-2 text-muted-foreground">
           <LogOut className="h-4 w-4" />
