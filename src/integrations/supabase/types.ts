@@ -16,43 +16,64 @@ export type Database = {
     Tables: {
       applications: {
         Row: {
+          age: number | null
           cover_letter: string | null
           created_at: string
+          current_location: string | null
           email: string
           full_name: string
+          gender: string | null
           id: string
           job_id: string
+          notice_period: string | null
           phone: string | null
           resume_content: Json | null
+          resume_file_name: string | null
+          resume_path: string | null
           status: string
           updated_at: string
           user_id: string
+          years_experience: string | null
         }
         Insert: {
+          age?: number | null
           cover_letter?: string | null
           created_at?: string
+          current_location?: string | null
           email: string
           full_name: string
+          gender?: string | null
           id?: string
           job_id: string
+          notice_period?: string | null
           phone?: string | null
           resume_content?: Json | null
+          resume_file_name?: string | null
+          resume_path?: string | null
           status?: string
           updated_at?: string
           user_id: string
+          years_experience?: string | null
         }
         Update: {
+          age?: number | null
           cover_letter?: string | null
           created_at?: string
+          current_location?: string | null
           email?: string
           full_name?: string
+          gender?: string | null
           id?: string
           job_id?: string
+          notice_period?: string | null
           phone?: string | null
           resume_content?: Json | null
+          resume_file_name?: string | null
+          resume_path?: string | null
           status?: string
           updated_at?: string
           user_id?: string
+          years_experience?: string | null
         }
         Relationships: [
           {
@@ -66,52 +87,79 @@ export type Database = {
       }
       jobs: {
         Row: {
+          application_deadline: string | null
+          area: string | null
+          benefits: string | null
           company: string
           created_at: string
           description: string
           employment_type: string | null
+          experience_level: string | null
           id: string
+          laptop_policy: string | null
           location: string | null
+          openings: number | null
+          qualification: string | null
           recruiter_id: string
           requirements: string | null
           responsibilities: string | null
           salary_range: string | null
+          shift_timing: string | null
           skills: string[] | null
           status: string
           title: string
           updated_at: string
+          work_mode: string | null
         }
         Insert: {
+          application_deadline?: string | null
+          area?: string | null
+          benefits?: string | null
           company: string
           created_at?: string
           description: string
           employment_type?: string | null
+          experience_level?: string | null
           id?: string
+          laptop_policy?: string | null
           location?: string | null
+          openings?: number | null
+          qualification?: string | null
           recruiter_id: string
           requirements?: string | null
           responsibilities?: string | null
           salary_range?: string | null
+          shift_timing?: string | null
           skills?: string[] | null
           status?: string
           title: string
           updated_at?: string
+          work_mode?: string | null
         }
         Update: {
+          application_deadline?: string | null
+          area?: string | null
+          benefits?: string | null
           company?: string
           created_at?: string
           description?: string
           employment_type?: string | null
+          experience_level?: string | null
           id?: string
+          laptop_policy?: string | null
           location?: string | null
+          openings?: number | null
+          qualification?: string | null
           recruiter_id?: string
           requirements?: string | null
           responsibilities?: string | null
           salary_range?: string | null
+          shift_timing?: string | null
           skills?: string[] | null
           status?: string
           title?: string
           updated_at?: string
+          work_mode?: string | null
         }
         Relationships: []
       }
@@ -222,13 +270,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
       app_role: "job_seeker" | "recruiter"
