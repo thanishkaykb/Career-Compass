@@ -374,30 +374,6 @@ Applications
 
 ---
 
-## 📸 Screenshots
-
-### Landing Page
-
-_Add screenshot_
-
-### Resume Builder
-
-_Add screenshot_
-
-### Resume Analyzer
-
-_Add screenshot_
-
-### Job Board
-
-_Add screenshot_
-
-### Recruiter Dashboard
-
-_Add screenshot_
-
----
-
 ## 🏆 Research Relevance
 
 This project explores concepts from:
