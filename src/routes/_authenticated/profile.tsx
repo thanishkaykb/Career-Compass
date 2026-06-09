@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/profile")({ component: ProfilePage });
 
 function ProfilePage() {
-  const { user, role } = useAuth();
+  const { user, role, refreshProfile } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [p, setP] = useState({
@@ -30,7 +30,7 @@ function ProfilePage() {
     setSaving(true);
     const { error } = await supabase.from("profiles").update(p).eq("id", user.id);
     setSaving(false);
-    if (error) toast.error(error.message); else toast.success("Profile saved");
+    if (error) toast.error(error.message); else { toast.success("Profile saved"); refreshProfile(); }
   };
 
   if (loading) return <div className="flex justify-center p-10"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
