@@ -19,7 +19,7 @@ function Dashboard() {
   ];
   const cards = role === "recruiter" ? recruiterCards : seekerCards;
 
-  const displayName = profile?.full_name || (user?.email ? user.email.split("@")[0] : "");
+  const displayName = profile?.full_name?.trim() || (user?.email ? user.email.split("@")[0] : "");
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
