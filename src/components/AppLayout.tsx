@@ -22,7 +22,7 @@ const recruiterNav = [
 ] as const;
 
 export function AppLayout({ children }: { children: ReactNode }) {
-  const { role, user } = useAuth();
+  const { role, user, profile } = useAuth();
   const loc = useLocation();
   const navigate = useNavigate();
   const nav = role === "recruiter" ? recruiterNav : seekerNav;
@@ -42,7 +42,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
           <span className="display font-bold">Career Compass</span>
         </Link>
         <div className="flex-1" />
-        <span className="text-xs text-muted-foreground hidden lg:inline">{user?.email}</span>
+        <span className="text-xs text-muted-foreground hidden lg:inline">{profile?.full_name || user?.email}</span>
         <button onClick={signOut} className="rounded-lg p-2 hover:bg-surface-2 text-muted-foreground" title="Sign out">
           <LogOut className="h-4 w-4" />
         </button>

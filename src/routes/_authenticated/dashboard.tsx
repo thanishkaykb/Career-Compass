@@ -7,7 +7,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 function Dashboard() {
-  const { user, role } = useAuth();
+  const { user, role, profile } = useAuth();
   const seekerCards = [
     { to: "/resume-builder", t: "Build my resume", d: "AI-generated from your real info", i: FileText },
     { to: "/resume-analyzer", t: "Analyze my resume", d: "Match it to any job posting", i: Search },
@@ -19,9 +19,11 @@ function Dashboard() {
   ];
   const cards = role === "recruiter" ? recruiterCards : seekerCards;
 
+  const displayName = profile?.full_name || (user?.email ? user.email.split("@")[0] : "");
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-      <h1 className="display text-3xl font-bold sm:text-4xl">Welcome back{user?.email ? `, ${user.email.split("@")[0]}` : ""}.</h1>
+      <h1 className="display text-3xl font-bold sm:text-4xl">Welcome back{displayName ? `, ${displayName}` : ""}.</h1>
       <p className="mt-2 text-sm text-muted-foreground">{role === "recruiter" ? "Manage your postings and applicants." : "Build, analyze, apply — all in one place."}</p>
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map(({ to, t, d, i: Icon }) => (
