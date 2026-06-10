@@ -7,7 +7,7 @@ export function Logo({ className = "h-9 w-9", alt = "Career Compass" }: { classN
     <img
       src={logoAsset.url}
       alt={alt}
-      className={`${className} rounded-xl object-cover bg-[#c9f64a]`}
+      className={`${className} rounded-lg object-contain bg-[#c9f64a] p-0.5`}
     />
   );
 }
