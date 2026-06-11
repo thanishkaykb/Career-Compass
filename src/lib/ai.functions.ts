@@ -134,6 +134,7 @@ Return ONLY this JSON shape (fill every field you have ANY basis for; copy fullN
   "projects": [{ "name": "", "description": "1-2 sentences", "tech": ["..."], "url": "" }],
   "certifications": ["..."]
 }
+IMPORTANT: The "github.repos" array above contains the person's REAL GitHub repositories. You MUST convert the best 4-6 of them into project entries (use repo name, description, language/topics as tech, and the repo URL). Also include any projects the user typed manually. Never leave "projects" empty if any repos were provided.
 Keep total content within two printed pages. Polish wording but never invent employers, dates, or degrees.`;
 
     const raw = await callAI([{ role: "system", content: system }, { role: "user", content: userPrompt }], { json: true });
