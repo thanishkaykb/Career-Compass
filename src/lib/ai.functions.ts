@@ -25,6 +25,23 @@ async function callAI(messages: Array<{ role: string; content: string }>, opts: 
   return data.choices?.[0]?.message?.content as string ?? "";
 }
 
+// LLMs sometimes wrap JSON in markdown fences or add stray text — extract robustly.
+function parseAIJson(raw: string): unknown {
+  let txt = raw.trim();
+  const fence = txt.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fence) txt = fence[1].trim();
+  const start = txt.indexOf("{");
+  const end = txt.lastIndexOf("}");
+  if (start !== -1 && end > start) txt = txt.slice(start, end + 1);
+  try {
+    return JSON.parse(txt);
+  } catch {
+    // Remove trailing commas and retry
+    try { return JSON.parse(txt.replace(/,\s*([}\]])/g, "$1")); }
+    catch { throw new Error("AI returned an unreadable response. Please try again."); }
+  }
+}
+
 async function fetchGitHubProfile(url: string) {
   const m = url.match(/github\.com\/([^\/\?#]+)/i);
   if (!m) return null;
