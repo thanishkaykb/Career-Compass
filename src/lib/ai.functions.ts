@@ -25,6 +25,23 @@ async function callAI(messages: Array<{ role: string; content: string }>, opts: 
   return data.choices?.[0]?.message?.content as string ?? "";
 }
 
+// LLMs sometimes wrap JSON in markdown fences or add stray text — extract robustly.
+function parseAIJson(raw: string): unknown {
+  let txt = raw.trim();
+  const fence = txt.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fence) txt = fence[1].trim();
+  const start = txt.indexOf("{");
+  const end = txt.lastIndexOf("}");
+  if (start !== -1 && end > start) txt = txt.slice(start, end + 1);
+  try {
+    return JSON.parse(txt);
+  } catch {
+    // Remove trailing commas and retry
+    try { return JSON.parse(txt.replace(/,\s*([}\]])/g, "$1")); }
+    catch { throw new Error("AI returned an unreadable response. Please try again."); }
+  }
+}
+
 async function fetchGitHubProfile(url: string) {
   const m = url.match(/github\.com\/([^\/\?#]+)/i);
   if (!m) return null;
@@ -76,47 +93,54 @@ export const generateResume = createServerFn({ method: "POST" })
     let gh: Awaited<ReturnType<typeof fetchGitHubProfile>> = null;
     if (data.githubUrl) gh = await fetchGitHubProfile(data.githubUrl);
 
-    const system = `You are an expert resume writer. Generate a clean, ATS-friendly resume in strict JSON. Only use information provided. Do NOT fabricate companies, dates, or accomplishments. If a field is missing, leave it empty rather than inventing content.`;
+    const system = `You are an expert resume writer. Generate a complete, ATS-friendly resume in strict JSON. Never fabricate companies, employment dates, or degrees. However, you MUST make the most of everything provided: expand terse notes into polished, achievement-oriented content; turn GitHub repos into rich project entries (name, description, tech stack, URL); derive skills from listed skills, projects, and repo languages; always write a strong 3-4 sentence professional summary from whatever is available. The resume must never come back empty — every section the user gave ANY information for must be fully written out.`;
 
     const userPrompt = `Build a resume for this person targeting: ${data.targetRole || "any suitable role"}.
 
-USER INPUT:
+USER INPUT (may be terse — expand and polish it):
 ${JSON.stringify({ ...data, github: gh ?? undefined }, null, 2)}
 
-Return ONLY this JSON shape:
+Return ONLY this JSON shape (fill every field you have ANY basis for; copy fullName/email/phone/location/links verbatim from input):
 {
-  "fullName": "", "headline": "", "email": "", "phone": "", "location": "",
+  "fullName": "", "headline": "concise title based on target role/skills", "email": "", "phone": "", "location": "",
   "links": { "github": "", "linkedin": "", "portfolio": "" },
-  "summary": "3-4 sentence professional summary based ONLY on supplied info",
-  "skills": ["..."],
-  "experience": [{ "title": "", "company": "", "location": "", "startDate": "", "endDate": "", "bullets": ["..."] }],
+  "summary": "3-4 sentence professional summary",
+  "skills": ["8-15 skills from input + GitHub repo languages"],
+  "experience": [{ "title": "", "company": "", "location": "", "startDate": "", "endDate": "", "bullets": ["2-4 impactful bullets"] }],
   "education": [{ "degree": "", "school": "", "location": "", "startDate": "", "endDate": "", "details": "" }],
-  "projects": [{ "name": "", "description": "", "tech": ["..."], "url": "" }],
+  "projects": [{ "name": "", "description": "1-2 sentences", "tech": ["..."], "url": "" }],
   "certifications": ["..."]
 }
-Polish wording into impactful, achievement-oriented bullets but never invent data.`;
+Keep total content within two printed pages. Polish wording but never invent employers, dates, or degrees.`;
 
     const raw = await callAI([{ role: "system", content: system }, { role: "user", content: userPrompt }], { json: true });
-    let resume: unknown;
-    try { resume = JSON.parse(raw); } catch { throw new Error("AI returned invalid JSON. Try again."); }
+    const resume = parseAIJson(raw) as Record<string, unknown>;
+    // Guarantee the basics are never blank even if the model omits them
+    resume.fullName = resume.fullName || data.fullName;
+    resume.email = resume.email || data.email;
+    if (!resume.links) resume.links = { github: data.githubUrl, linkedin: data.linkedinUrl, portfolio: data.portfolioUrl };
 
     const { data: saved, error } = await context.supabase
       .from("resumes")
       .insert({ user_id: context.userId, title: `${data.fullName} — ${data.targetRole || "Resume"}`, content: resume as never })
       .select().single();
     if (error) throw new Error(error.message);
-    return { resume: raw, id: saved.id as string };
+    return { resume: JSON.stringify(resume), id: saved.id as string };
   });
 
 const AnalyzeInput = z.object({
-  resumeText: z.string().min(50).max(20000),
-  jobTitle: z.string().min(1).max(200),
-  jobDescription: z.string().min(20).max(10000),
+  resumeText: z.string().min(50, "Your resume text is too short — please upload a resume with more content.").max(20000),
+  jobTitle: z.string().min(1, "Please enter the job title.").max(200),
+  jobDescription: z.string().min(20, "Please paste a longer job description (at least 20 characters).").max(10000),
 });
 
 export const analyzeResume = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => AnalyzeInput.parse(d))
+  .inputValidator((d: unknown) => {
+    const r = AnalyzeInput.safeParse(d);
+    if (!r.success) throw new Error(r.error.issues[0]?.message ?? "Invalid input.");
+    return r.data;
+  })
   .handler(async ({ data }) => {
     const system = `You are a senior recruiter and career coach. Analyze how well a candidate's resume matches a target job. Be honest and specific. Output strict JSON.`;
     const prompt = `TARGET JOB:
@@ -139,5 +163,13 @@ Return ONLY this JSON:
   "overallFeedback": "paragraph of overall guidance"
 }`;
     const raw = await callAI([{ role: "system", content: system }, { role: "user", content: prompt }], { json: true });
-    try { return JSON.parse(raw); } catch { throw new Error("AI returned invalid JSON. Try again."); }
+    return parseAIJson(raw) as {
+      eligibility: { verdict: string; score: number; reasoning: string };
+      matchedSkills: string[];
+      missingSkills: string[];
+      strengths: string[];
+      weaknesses: string[];
+      resumeChanges: Array<{ section: string; current: string; suggested: string; why: string }>;
+      overallFeedback: string;
+    };
   });

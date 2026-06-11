@@ -57,7 +57,9 @@ function Analyzer() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!resumeText || resumeText.length < 50) { toast.error("Please upload your resume first."); return; }
+    if (!resumeText || resumeText.trim().length < 50) { toast.error("Please upload your resume first."); return; }
+    if (!jobTitle.trim()) { toast.error("Please enter the job title."); return; }
+    if (jobDescription.trim().length < 20) { toast.error("Please paste a longer job description (at least 20 characters)."); return; }
     setLoading(true); setResult(null);
     try {
       const r = await fn({ data: { resumeText, jobTitle, jobDescription } });

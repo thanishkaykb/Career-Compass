@@ -22,9 +22,9 @@ interface TemplateProps {
 
 export const ModernTemplate: React.FC<TemplateProps> = ({ data }) => (
   <div className="bg-white text-slate-900 p-8 shadow-sm font-sans max-w-[21cm] mx-auto min-h-[29.7cm]">
-    <div className="border-b-2 border-primary pb-6 mb-6">
-      <h1 className="text-4xl font-extrabold tracking-tight uppercase">{data.fullName}</h1>
-      {data.headline && <p className="text-xl text-primary font-medium mt-1">{data.headline}</p>}
+    <div className="border-b-2 border-slate-900 pb-6 mb-6">
+      <h1 className="text-4xl font-extrabold tracking-tight uppercase text-slate-900">{data.fullName}</h1>
+      {data.headline && <p className="text-xl text-teal-700 font-medium mt-1">{data.headline}</p>}
       <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-slate-600">
         {data.email && <span>{data.email}</span>}
         {data.phone && <span>• {data.phone}</span>}
@@ -36,14 +36,14 @@ export const ModernTemplate: React.FC<TemplateProps> = ({ data }) => (
       <div className="col-span-2 space-y-6">
         {data.summary && (
           <section>
-            <h2 className="text-sm font-bold text-primary uppercase tracking-widest border-b mb-2">Profile</h2>
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-300 mb-2">Profile</h2>
             <p className="text-sm leading-relaxed">{data.summary}</p>
           </section>
         )}
 
         {data.experience && data.experience.length > 0 && (
           <section>
-            <h2 className="text-sm font-bold text-primary uppercase tracking-widest border-b mb-3">Experience</h2>
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-300 mb-3">Experience</h2>
             <div className="space-y-4">
               {data.experience.map((exp, i) => (
                 <div key={i}>
@@ -65,7 +65,7 @@ export const ModernTemplate: React.FC<TemplateProps> = ({ data }) => (
       <div className="space-y-6">
         {data.skills && data.skills.length > 0 && (
           <section>
-            <h2 className="text-sm font-bold text-primary uppercase tracking-widest border-b mb-3">Skills</h2>
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-300 mb-3">Skills</h2>
             <div className="flex flex-wrap gap-2">
               {data.skills.map((s, i) => (
                 <span key={i} className="text-xs bg-slate-100 px-2 py-1 rounded">{s}</span>
@@ -76,7 +76,7 @@ export const ModernTemplate: React.FC<TemplateProps> = ({ data }) => (
 
         {data.education && data.education.length > 0 && (
           <section>
-            <h2 className="text-sm font-bold text-primary uppercase tracking-widest border-b mb-3">Education</h2>
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-300 mb-3">Education</h2>
             <div className="space-y-3">
               {data.education.map((edu, i) => (
                 <div key={i}>
