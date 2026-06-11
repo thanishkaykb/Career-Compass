@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { generateResume } from "@/lib/ai.functions";
 import { supabase } from "@/integrations/supabase/client";
@@ -25,19 +25,22 @@ function ResumeBuilder() {
     githubUrl: "", linkedinUrl: "", portfolioUrl: "",
   });
 
+  const prefilled = useRef(false);
   useEffect(() => {
-    if (!user) return;
+    if (!user || prefilled.current) return;
+    prefilled.current = true;
     supabase.from("profiles").select("*").eq("id", user.id).maybeSingle().then(({ data }) => {
       if (!data) return;
+      // Only fill fields the user hasn't typed into yet — never overwrite their input
       setF((p) => ({
         ...p,
-        fullName: data.full_name || "",
-        email: data.email || user.email || "",
-        phone: data.phone || "",
-        location: data.location || "",
-        githubUrl: data.github_url || "",
-        linkedinUrl: data.linkedin_url || "",
-        portfolioUrl: data.portfolio_url || "",
+        fullName: p.fullName || data.full_name || "",
+        email: p.email || data.email || user.email || "",
+        phone: p.phone || data.phone || "",
+        location: p.location || data.location || "",
+        githubUrl: p.githubUrl || data.github_url || "",
+        linkedinUrl: p.linkedinUrl || data.linkedin_url || "",
+        portfolioUrl: p.portfolioUrl || data.portfolio_url || "",
       }));
     });
   }, [user]);
