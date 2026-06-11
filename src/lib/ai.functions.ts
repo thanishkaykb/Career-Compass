@@ -47,11 +47,36 @@ async function fetchGitHubProfile(url: string) {
   if (!m) return null;
   const username = m[1];
   try {
-    const [u, r] = await Promise.all([
-      fetch(`https://api.github.com/users/${username}`).then((r) => (r.ok ? r.json() : null)),
-      fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=10`).then((r) => (r.ok ? r.json() : [])),
-    ]);
+    const headers = { "User-Agent": "career-compass", Accept: "application/vnd.github+json" };
+    const u = await fetch(`https://api.github.com/users/${username}`, { headers }).then((r) => (r.ok ? r.json() : null));
     if (!u) return null;
+
+    // Fetch ALL public repos (paginated, up to 300)
+    const allRepos: Array<Record<string, unknown>> = [];
+    for (let page = 1; page <= 3; page++) {
+      const batch = await fetch(`https://api.github.com/users/${username}/repos?per_page=100&page=${page}&sort=pushed`, { headers })
+        .then((r) => (r.ok ? r.json() : []));
+      if (!Array.isArray(batch) || batch.length === 0) break;
+      allRepos.push(...batch);
+      if (batch.length < 100) break;
+    }
+
+    // Prefer original (non-fork) repos, sorted by stars then recency
+    const repos = allRepos
+      .filter((x) => !x.fork)
+      .sort((a, b) => ((b.stargazers_count as number) || 0) - ((a.stargazers_count as number) || 0))
+      .slice(0, 30)
+      .map((x) => ({
+        name: x.name,
+        description: x.description,
+        language: x.language,
+        topics: x.topics,
+        stars: x.stargazers_count,
+        url: x.html_url,
+        homepage: x.homepage,
+        updated: x.pushed_at,
+      }));
+
     return {
       username,
       name: u.name,
@@ -62,9 +87,7 @@ async function fetchGitHubProfile(url: string) {
       followers: u.followers,
       public_repos: u.public_repos,
       avatar_url: u.avatar_url,
-      repos: (r as Array<Record<string, unknown>>).map((x) => ({
-        name: x.name, description: x.description, language: x.language, stars: x.stargazers_count, url: x.html_url,
-      })),
+      repos,
     };
   } catch { return null; }
 }
