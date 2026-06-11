@@ -163,5 +163,5 @@ Return ONLY this JSON:
   "overallFeedback": "paragraph of overall guidance"
 }`;
     const raw = await callAI([{ role: "system", content: system }, { role: "user", content: prompt }], { json: true });
-    try { return JSON.parse(raw); } catch { throw new Error("AI returned invalid JSON. Try again."); }
+    return parseAIJson(raw);
   });
