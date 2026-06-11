@@ -163,5 +163,13 @@ Return ONLY this JSON:
   "overallFeedback": "paragraph of overall guidance"
 }`;
     const raw = await callAI([{ role: "system", content: system }, { role: "user", content: prompt }], { json: true });
-    return parseAIJson(raw);
+    return parseAIJson(raw) as {
+      eligibility: { verdict: string; score: number; reasoning: string };
+      matchedSkills: string[];
+      missingSkills: string[];
+      strengths: string[];
+      weaknesses: string[];
+      resumeChanges: Array<{ section: string; current: string; suggested: string; why: string }>;
+      overallFeedback: string;
+    };
   });
