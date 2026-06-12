@@ -20,7 +20,7 @@ function ResumeBuilder() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState("modern");
-  const [f, setF] = useState({
+  const [f, setF] = usePersistedState("resume-builder-form", {
     fullName: "", email: "", phone: "", location: "", targetRole: "",
     summary: "", education: "", experience: "", skills: "", projects: "", certifications: "",
     githubUrl: "", linkedinUrl: "", portfolioUrl: "",
