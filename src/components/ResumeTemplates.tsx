@@ -220,25 +220,174 @@ export const MinimalistTemplate: React.FC<TemplateProps> = ({ data }) => (
   </div>
 );
 
-export const TemplateSelector: React.FC<{ 
-  selected: string; 
+export const CreativeTemplate: React.FC<TemplateProps> = ({ data }) => (
+  <div className="bg-white text-slate-900 font-sans grid grid-cols-3 max-w-[21cm] mx-auto min-h-[29.7cm] shadow-sm">
+    <aside className="col-span-1 bg-slate-900 text-white p-6 space-y-6">
+      <div>
+        <h1 className="text-2xl font-extrabold leading-tight">{data.fullName}</h1>
+        {data.headline && <p className="text-sm text-[#CDFC6A] mt-1">{data.headline}</p>}
+      </div>
+      <section className="text-xs space-y-1">
+        {data.email && <p className="break-all">{data.email}</p>}
+        {data.phone && <p>{data.phone}</p>}
+        {data.location && <p>{data.location}</p>}
+        {data.links?.github && <p className="break-all">{data.links.github}</p>}
+        {data.links?.linkedin && <p className="break-all">{data.links.linkedin}</p>}
+        {data.links?.portfolio && <p className="break-all">{data.links.portfolio}</p>}
+      </section>
+      {data.skills && data.skills.length > 0 && (
+        <section>
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#CDFC6A] mb-2">Skills</h2>
+          <ul className="text-xs space-y-1">{data.skills.map((s, i) => <li key={i}>• {s}</li>)}</ul>
+        </section>
+      )}
+      {data.education && data.education.length > 0 && (
+        <section>
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#CDFC6A] mb-2">Education</h2>
+          {data.education.map((e, i) => (
+            <div key={i} className="text-xs mb-2">
+              <p className="font-bold">{e.degree}</p>
+              <p className="opacity-80">{e.school}</p>
+              <p className="opacity-60 text-[10px]">{e.startDate} — {e.endDate}</p>
+            </div>
+          ))}
+        </section>
+      )}
+      {data.certifications && data.certifications.length > 0 && (
+        <section>
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#CDFC6A] mb-2">Certifications</h2>
+          <ul className="text-xs space-y-1">{data.certifications.map((c, i) => <li key={i}>• {c}</li>)}</ul>
+        </section>
+      )}
+    </aside>
+    <main className="col-span-2 p-7 space-y-5">
+      {data.summary && (
+        <section>
+          <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-900 mb-1.5">About</h2>
+          <p className="text-sm leading-relaxed">{data.summary}</p>
+        </section>
+      )}
+      {data.experience && data.experience.length > 0 && (
+        <section>
+          <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-900 mb-2">Experience</h2>
+          <div className="space-y-3">
+            {data.experience.map((e, i) => (
+              <div key={i}>
+                <div className="flex justify-between items-baseline">
+                  <h3 className="text-sm font-bold">{e.title}</h3>
+                  <span className="text-[10px] text-slate-500">{e.startDate} — {e.endDate}</span>
+                </div>
+                <p className="text-xs text-slate-600">{e.company}</p>
+                <ul className="list-disc ml-4 mt-1 text-xs space-y-0.5">{e.bullets?.map((b, j) => <li key={j}>{b}</li>)}</ul>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+      {data.projects && data.projects.length > 0 && (
+        <section>
+          <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-900 mb-2">Projects</h2>
+          <div className="space-y-2">
+            {data.projects.map((p, i) => (
+              <div key={i}>
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <h3 className="text-sm font-bold">{p.name}</h3>
+                  {p.url && <span className="text-[10px] text-slate-500 break-all">{p.url}</span>}
+                </div>
+                {p.description && <p className="text-xs">{p.description}</p>}
+                {p.tech && <p className="text-[10px] text-slate-500 mt-0.5">{p.tech.join(" · ")}</p>}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+    </main>
+  </div>
+);
+
+export const CompactTemplate: React.FC<TemplateProps> = ({ data }) => (
+  <div className="bg-white text-slate-900 p-8 font-sans max-w-[21cm] mx-auto min-h-[29.7cm] shadow-sm text-[13px] leading-snug">
+    <header className="border-b border-slate-300 pb-2 mb-3">
+      <div className="flex justify-between items-baseline flex-wrap gap-2">
+        <h1 className="text-2xl font-extrabold tracking-tight">{data.fullName}</h1>
+        <span className="text-xs text-slate-600">{[data.email, data.phone, data.location].filter(Boolean).join(" · ")}</span>
+      </div>
+      {data.headline && <p className="text-xs text-slate-600 mt-0.5">{data.headline}</p>}
+      {data.links && (
+        <p className="text-[10px] text-slate-500 mt-0.5 break-all">
+          {[data.links.github, data.links.linkedin, data.links.portfolio].filter(Boolean).join(" · ")}
+        </p>
+      )}
+    </header>
+    {data.summary && <p className="mb-3 text-[12px]">{data.summary}</p>}
+    {data.experience && data.experience.length > 0 && (
+      <section className="mb-3">
+        <h2 className="text-[10px] font-bold uppercase tracking-widest text-slate-700 border-b border-slate-200 mb-1.5">Experience</h2>
+        {data.experience.map((e, i) => (
+          <div key={i} className="mb-1.5">
+            <div className="flex justify-between text-[12px] font-semibold">
+              <span>{e.title} <span className="font-normal text-slate-600">— {e.company}</span></span>
+              <span className="text-slate-500 text-[10px]">{e.startDate} — {e.endDate}</span>
+            </div>
+            {e.bullets && <ul className="list-disc ml-4 text-[11px] mt-0.5 space-y-0.5">{e.bullets.map((b, j) => <li key={j}>{b}</li>)}</ul>}
+          </div>
+        ))}
+      </section>
+    )}
+    {data.projects && data.projects.length > 0 && (
+      <section className="mb-3">
+        <h2 className="text-[10px] font-bold uppercase tracking-widest text-slate-700 border-b border-slate-200 mb-1.5">Projects</h2>
+        {data.projects.map((p, i) => (
+          <div key={i} className="mb-1">
+            <p className="text-[12px]"><span className="font-semibold">{p.name}</span> — {p.description}</p>
+            {p.tech && <p className="text-[10px] text-slate-500">{p.tech.join(" · ")}</p>}
+          </div>
+        ))}
+      </section>
+    )}
+    <div className="grid grid-cols-2 gap-4">
+      {data.skills && data.skills.length > 0 && (
+        <section>
+          <h2 className="text-[10px] font-bold uppercase tracking-widest text-slate-700 border-b border-slate-200 mb-1.5">Skills</h2>
+          <p className="text-[11px]">{data.skills.join(" · ")}</p>
+        </section>
+      )}
+      {data.education && data.education.length > 0 && (
+        <section>
+          <h2 className="text-[10px] font-bold uppercase tracking-widest text-slate-700 border-b border-slate-200 mb-1.5">Education</h2>
+          {data.education.map((e, i) => (
+            <div key={i} className="text-[11px]">
+              <p className="font-semibold">{e.degree} — {e.school}</p>
+              <p className="text-slate-500 text-[10px]">{e.startDate} — {e.endDate}</p>
+            </div>
+          ))}
+        </section>
+      )}
+    </div>
+  </div>
+);
+
+export const TemplateSelector: React.FC<{
+  selected: string;
   onSelect: (id: string) => void;
 }> = ({ selected, onSelect }) => {
   const templates = [
     { id: "modern", name: "Modern" },
     { id: "professional", name: "Professional" },
     { id: "minimalist", name: "Minimalist" },
+    { id: "creative", name: "Creative" },
+    { id: "compact", name: "Compact" },
   ];
 
   return (
-    <div className="flex gap-2 mb-6">
+    <div className="flex gap-2 mb-6 flex-wrap">
       {templates.map((t) => (
         <button
           key={t.id}
           onClick={() => onSelect(t.id)}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            selected === t.id 
-              ? "bg-primary text-primary-foreground" 
+            selected === t.id
+              ? "bg-primary text-primary-foreground"
               : "bg-surface-2 text-muted-foreground hover:bg-surface-3"
           }`}
         >
