@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { usePersistedState } from "@/lib/use-persisted-state";
 
 export const Route = createFileRoute("/_authenticated/profile")({ component: ProfilePage });
 
@@ -11,7 +12,7 @@ function ProfilePage() {
   const { user, role, refreshProfile } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [p, setP] = useState({
+  const [p, setP] = usePersistedState(`profile-form-${user?.id ?? "anon"}`, {
     full_name: "", phone: "", location: "", headline: "", bio: "",
     github_url: "", linkedin_url: "", portfolio_url: "",
     company_name: "", company_website: "", recruiter_title: "",
