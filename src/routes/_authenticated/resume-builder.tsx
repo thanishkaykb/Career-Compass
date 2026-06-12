@@ -6,10 +6,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
 import { toast } from "sonner";
 import { Loader2, Sparkles, Download } from "lucide-react";
-import { 
-  ModernTemplate, ProfessionalTemplate, MinimalistTemplate, 
-  TemplateSelector, ResumeData 
+import {
+  ModernTemplate, ProfessionalTemplate, MinimalistTemplate, CreativeTemplate, CompactTemplate,
+  TemplateSelector, ResumeData
 } from "@/components/ResumeTemplates";
+import { usePersistedState } from "@/lib/use-persisted-state";
 
 export const Route = createFileRoute("/_authenticated/resume-builder")({ component: ResumeBuilder });
 
@@ -19,7 +20,7 @@ function ResumeBuilder() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState("modern");
-  const [f, setF] = useState({
+  const [f, setF] = usePersistedState("resume-builder-form", {
     fullName: "", email: "", phone: "", location: "", targetRole: "",
     summary: "", education: "", experience: "", skills: "", projects: "", certifications: "",
     githubUrl: "", linkedinUrl: "", portfolioUrl: "",
@@ -115,6 +116,8 @@ function ResumeBuilder() {
               {selectedTemplate === "modern" && <ModernTemplate data={parsed} />}
               {selectedTemplate === "professional" && <ProfessionalTemplate data={parsed} />}
               {selectedTemplate === "minimalist" && <MinimalistTemplate data={parsed} />}
+              {selectedTemplate === "creative" && <CreativeTemplate data={parsed} />}
+              {selectedTemplate === "compact" && <CompactTemplate data={parsed} />}
             </div>
           </div>
         </div>

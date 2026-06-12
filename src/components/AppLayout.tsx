@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { LayoutDashboard, FileText, Search, Briefcase, Building2, LogOut, User } from "lucide-react";
+import { LayoutDashboard, FileText, Search, Briefcase, Building2, LogOut, User, ClipboardList } from "lucide-react";
 import type { ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
@@ -11,6 +11,7 @@ const seekerNav = [
   { to: "/resume-builder", label: "Resume", icon: FileText },
   { to: "/resume-analyzer", label: "Analyze", icon: Search },
   { to: "/jobs", label: "Jobs", icon: Briefcase },
+  { to: "/applications", label: "Applied", icon: ClipboardList },
   { to: "/profile", label: "Profile", icon: User },
 ] as const;
 

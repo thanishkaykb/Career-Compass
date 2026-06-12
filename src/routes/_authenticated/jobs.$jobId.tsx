@@ -4,8 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
 import { toast } from "sonner";
-import { CheckCircle2, MapPin, Loader2, Upload, FileText } from "lucide-react";
+import { CheckCircle2, MapPin, Loader2, Upload, FileText, Briefcase, DollarSign, Clock } from "lucide-react";
 import { extractTextFromFile } from "@/lib/file-parser";
+import { usePersistedState } from "@/lib/use-persisted-state";
 
 export const Route = createFileRoute("/_authenticated/jobs/$jobId")({ component: JobDetail });
 
@@ -18,7 +19,7 @@ function JobDetail() {
   const [extracting, setExtracting] = useState(false);
   const [resumeFileName, setResumeFileName] = useState("");
   const resumeInputRef = useRef<HTMLInputElement>(null);
-  const [form, setForm] = useState({ full_name: "", email: "", phone: "", cover_letter: "", resume_text: "" });
+  const [form, setForm] = usePersistedState(`apply-form-${jobId}`, { full_name: "", email: "", phone: "", cover_letter: "", resume_text: "" });
 
   const handleResumeFile = async (file: File) => {
     setExtracting(true); setResumeFileName(file.name);
@@ -70,6 +71,9 @@ function JobDetail() {
     setSubmitting(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Application submitted");
+    try { window.localStorage.removeItem(`apply-form-${jobId}`); } catch { /* ignore */ }
+    setForm({ full_name: "", email: "", phone: "", cover_letter: "", resume_text: "" });
+    setResumeFileName("");
     setShowApply(false);
     refetch();
   };

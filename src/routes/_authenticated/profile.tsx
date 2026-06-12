@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { usePersistedState } from "@/lib/use-persisted-state";
 
 export const Route = createFileRoute("/_authenticated/profile")({ component: ProfilePage });
 
@@ -11,7 +12,7 @@ function ProfilePage() {
   const { user, role, refreshProfile } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [p, setP] = useState({
+  const [p, setP] = usePersistedState(`profile-form-${user?.id ?? "anon"}`, {
     full_name: "", phone: "", location: "", headline: "", bio: "",
     github_url: "", linkedin_url: "", portfolio_url: "",
     company_name: "", company_website: "", recruiter_title: "",
@@ -20,10 +21,17 @@ function ProfilePage() {
   useEffect(() => {
     if (!user) return;
     supabase.from("profiles").select("*").eq("id", user.id).maybeSingle().then(({ data }) => {
-      if (data) setP((prev) => ({ ...prev, ...Object.fromEntries(Object.entries(data).filter(([k]) => k in prev).map(([k, v]) => [k, v ?? ""])) }));
+      // Only fill empty fields — never clobber what the user has typed and we persisted locally
+      if (data) setP((prev) => {
+        const next = { ...prev };
+        for (const [k, v] of Object.entries(data)) {
+          if (k in next && !next[k as keyof typeof next] && v) next[k as keyof typeof next] = String(v);
+        }
+        return next;
+      });
       setLoading(false);
     });
-  }, [user]);
+  }, [user, setP]);
 
   const save = async () => {
     if (!user) return;
