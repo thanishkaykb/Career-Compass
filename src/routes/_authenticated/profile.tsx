@@ -21,10 +21,17 @@ function ProfilePage() {
   useEffect(() => {
     if (!user) return;
     supabase.from("profiles").select("*").eq("id", user.id).maybeSingle().then(({ data }) => {
-      if (data) setP((prev) => ({ ...prev, ...Object.fromEntries(Object.entries(data).filter(([k]) => k in prev).map(([k, v]) => [k, v ?? ""])) }));
+      // Only fill empty fields — never clobber what the user has typed and we persisted locally
+      if (data) setP((prev) => {
+        const next = { ...prev };
+        for (const [k, v] of Object.entries(data)) {
+          if (k in next && !next[k as keyof typeof next] && v) next[k as keyof typeof next] = String(v);
+        }
+        return next;
+      });
       setLoading(false);
     });
-  }, [user]);
+  }, [user, setP]);
 
   const save = async () => {
     if (!user) return;
