@@ -6,10 +6,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-hooks";
 import { toast } from "sonner";
 import { Loader2, Sparkles, Download } from "lucide-react";
-import { 
-  ModernTemplate, ProfessionalTemplate, MinimalistTemplate, 
-  TemplateSelector, ResumeData 
+import {
+  ModernTemplate, ProfessionalTemplate, MinimalistTemplate, CreativeTemplate, CompactTemplate,
+  TemplateSelector, ResumeData
 } from "@/components/ResumeTemplates";
+import { usePersistedState } from "@/lib/use-persisted-state";
 
 export const Route = createFileRoute("/_authenticated/resume-builder")({ component: ResumeBuilder });
 
