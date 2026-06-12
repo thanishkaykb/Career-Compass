@@ -116,6 +116,8 @@ function ResumeBuilder() {
               {selectedTemplate === "modern" && <ModernTemplate data={parsed} />}
               {selectedTemplate === "professional" && <ProfessionalTemplate data={parsed} />}
               {selectedTemplate === "minimalist" && <MinimalistTemplate data={parsed} />}
+              {selectedTemplate === "creative" && <CreativeTemplate data={parsed} />}
+              {selectedTemplate === "compact" && <CompactTemplate data={parsed} />}
             </div>
           </div>
         </div>
