@@ -71,6 +71,9 @@ function JobDetail() {
     setSubmitting(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Application submitted");
+    try { window.localStorage.removeItem(`apply-form-${jobId}`); } catch { /* ignore */ }
+    setForm({ full_name: "", email: "", phone: "", cover_letter: "", resume_text: "" });
+    setResumeFileName("");
     setShowApply(false);
     refetch();
   };
