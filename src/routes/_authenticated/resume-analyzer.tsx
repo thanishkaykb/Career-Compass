@@ -113,6 +113,20 @@ function Analyzer() {
         </div>
 
         <div className="glass rounded-2xl p-6 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Extracted resume text</span>
+            <span className="text-[10px] text-muted-foreground">{resumeText.length.toLocaleString()} chars — edit or paste manually if extraction is incomplete</span>
+          </div>
+          <textarea
+            value={resumeText}
+            onChange={(e) => setResumeText(e.target.value)}
+            rows={10}
+            placeholder="Your extracted resume text will appear here. If your PDF is a scanned image, paste your resume text manually."
+            className="w-full rounded-xl bg-surface-2 px-3 py-2.5 text-sm border border-border focus:border-primary outline-none font-mono"
+          />
+        </div>
+
+        <div className="glass rounded-2xl p-6 space-y-3">
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Target Job</span>
           <input value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} placeholder="Job title (e.g. Full Stack Developer)" required
             className="w-full rounded-xl bg-surface-2 px-3 py-2.5 text-sm border border-border focus:border-primary outline-none" />
