@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Mail, Loader2, ArrowLeft, User, Building2 } from "lucide-react";
 import { z } from "zod";
 import { Logo } from "@/components/Logo";
+import { lovable } from "@/integrations/lovable";
 
 const searchSchema = z.object({
   role: z.enum(["job_seeker", "recruiter"]).optional(),
@@ -52,7 +53,7 @@ function AuthPage() {
               company_name: isRecruiter ? companyName.trim() : null,
               phone: phone.trim() || null,
             },
-            emailRedirectTo: `${window.location.origin}/auth?role=${role}`,
+            emailRedirectTo: `${window.location.origin}/auth`,
           },
         });
         if (error) throw error;
@@ -84,7 +85,7 @@ function AuthPage() {
     const { error } = await supabase.auth.resend({
       type: "signup",
       email: sentTo,
-      options: { emailRedirectTo: `${window.location.origin}/auth?role=${role}` },
+      options: { emailRedirectTo: `${window.location.origin}/auth` },
     });
     setLoading(false);
     if (error) toast.error(error.message);
@@ -164,6 +165,30 @@ function AuthPage() {
               className="w-full rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60 flex items-center justify-center gap-2">
               {loading && <Loader2 className="h-4 w-4 animate-spin" />}
               {mode === "signup" ? "Create account" : "Sign in"}
+            </button>
+
+            <div className="relative my-2">
+              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div>
+              <div className="relative flex justify-center"><span className="bg-surface-1 px-2 text-[11px] uppercase tracking-wider text-muted-foreground">or</span></div>
+            </div>
+
+            <button type="button" disabled={loading} onClick={async () => {
+              setLoading(true);
+              try {
+                const result = await lovable.auth.signInWithOAuth("google", {
+                  redirect_uri: window.location.origin + "/dashboard",
+                  extraParams: { prompt: "select_account" },
+                });
+                if (result.error) { toast.error(result.error.message ?? "Google sign-in failed"); setLoading(false); return; }
+                if (result.redirected) return;
+                navigate({ to: "/dashboard" });
+              } catch (err) {
+                toast.error(err instanceof Error ? err.message : "Google sign-in failed");
+                setLoading(false);
+              }
+            }} className="w-full rounded-xl bg-white py-3 text-sm font-semibold text-black border border-border hover:bg-white/90 disabled:opacity-60 flex items-center justify-center gap-2">
+              <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.95v2.32A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.97 10.72A5.4 5.4 0 0 1 3.68 9c0-.6.1-1.18.29-1.72V4.96H.95A9 9 0 0 0 0 9c0 1.45.35 2.82.95 4.04l3.02-2.32z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.9 11.42 0 9 0A9 9 0 0 0 .95 4.96L3.97 7.28C4.68 5.16 6.66 3.58 9 3.58z"/></svg>
+              Continue with Google
             </button>
             {mode === "signin" && (
               <button type="button" onClick={async () => {
