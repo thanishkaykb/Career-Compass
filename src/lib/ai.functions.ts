@@ -61,6 +61,8 @@ async function fetchGitHubProfile(url: string) {
       if (batch.length < 100) break;
     }
 
+    const skippedForks = allRepos.filter((x) => Boolean(x.fork)).length;
+
     // Prefer original (non-fork) repos, sorted by stars then recency
     const repos = allRepos
       .filter((x) => !x.fork)
@@ -87,10 +89,45 @@ async function fetchGitHubProfile(url: string) {
       followers: u.followers,
       public_repos: u.public_repos,
       avatar_url: u.avatar_url,
+      repo_count: allRepos.length,
+      skipped_forks: skippedForks,
       repos,
     };
   } catch { return null; }
 }
+
+const GitHubPreviewInput = z.object({
+  githubUrl: z.string().max(300),
+});
+
+export const previewGitHubRepos = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => GitHubPreviewInput.parse(d))
+  .handler(async ({ data }) => {
+    const github = await fetchGitHubProfile(data.githubUrl);
+    if (!github) {
+      return {
+        found: false,
+        repoCount: 0,
+        skippedForks: 0,
+        chosenRepos: [],
+      };
+    }
+
+    return {
+      found: true,
+      username: github.username,
+      repoCount: github.repo_count ?? github.public_repos ?? github.repos.length,
+      skippedForks: github.skipped_forks ?? 0,
+      chosenRepos: github.repos.slice(0, 6).map((repo) => ({
+        name: String(repo.name ?? ""),
+        description: typeof repo.description === "string" ? repo.description : "",
+        language: typeof repo.language === "string" ? repo.language : "",
+        stars: typeof repo.stars === "number" ? repo.stars : 0,
+        url: typeof repo.url === "string" ? repo.url : "",
+      })),
+    };
+  });
 
 const ResumeInput = z.object({
   fullName: z.string().min(1).max(120),
