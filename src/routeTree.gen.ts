@@ -20,6 +20,7 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedJobsRouteImport } from './routes/_authenticated/jobs'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedApplicationsRouteImport } from './routes/_authenticated/applications'
+import { Route as AuthenticatedJobsIndexRouteImport } from './routes/_authenticated/jobs.index'
 import { Route as AuthenticatedJobsJobIdRouteImport } from './routes/_authenticated/jobs.$jobId'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -79,6 +80,11 @@ const AuthenticatedApplicationsRoute =
     path: '/applications',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedJobsIndexRoute = AuthenticatedJobsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedJobsRoute,
+} as any)
 const AuthenticatedJobsJobIdRoute = AuthenticatedJobsJobIdRouteImport.update({
   id: '/$jobId',
   path: '/$jobId',
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/resume-analyzer': typeof AuthenticatedResumeAnalyzerRoute
   '/resume-builder': typeof AuthenticatedResumeBuilderRoute
   '/jobs/$jobId': typeof AuthenticatedJobsJobIdRoute
+  '/jobs/': typeof AuthenticatedJobsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -104,12 +111,12 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/applications': typeof AuthenticatedApplicationsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/jobs': typeof AuthenticatedJobsRouteWithChildren
   '/profile': typeof AuthenticatedProfileRoute
   '/recruiter': typeof AuthenticatedRecruiterRoute
   '/resume-analyzer': typeof AuthenticatedResumeAnalyzerRoute
   '/resume-builder': typeof AuthenticatedResumeBuilderRoute
   '/jobs/$jobId': typeof AuthenticatedJobsJobIdRoute
+  '/jobs': typeof AuthenticatedJobsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -125,6 +132,7 @@ export interface FileRoutesById {
   '/_authenticated/resume-analyzer': typeof AuthenticatedResumeAnalyzerRoute
   '/_authenticated/resume-builder': typeof AuthenticatedResumeBuilderRoute
   '/_authenticated/jobs/$jobId': typeof AuthenticatedJobsJobIdRoute
+  '/_authenticated/jobs/': typeof AuthenticatedJobsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -140,6 +148,7 @@ export interface FileRouteTypes {
     | '/resume-analyzer'
     | '/resume-builder'
     | '/jobs/$jobId'
+    | '/jobs/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -147,12 +156,12 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/applications'
     | '/dashboard'
-    | '/jobs'
     | '/profile'
     | '/recruiter'
     | '/resume-analyzer'
     | '/resume-builder'
     | '/jobs/$jobId'
+    | '/jobs'
   id:
     | '__root__'
     | '/'
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/_authenticated/resume-analyzer'
     | '/_authenticated/resume-builder'
     | '/_authenticated/jobs/$jobId'
+    | '/_authenticated/jobs/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -255,6 +265,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedApplicationsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/jobs/': {
+      id: '/_authenticated/jobs/'
+      path: '/'
+      fullPath: '/jobs/'
+      preLoaderRoute: typeof AuthenticatedJobsIndexRouteImport
+      parentRoute: typeof AuthenticatedJobsRoute
+    }
     '/_authenticated/jobs/$jobId': {
       id: '/_authenticated/jobs/$jobId'
       path: '/$jobId'
@@ -267,10 +284,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedJobsRouteChildren {
   AuthenticatedJobsJobIdRoute: typeof AuthenticatedJobsJobIdRoute
+  AuthenticatedJobsIndexRoute: typeof AuthenticatedJobsIndexRoute
 }
 
 const AuthenticatedJobsRouteChildren: AuthenticatedJobsRouteChildren = {
   AuthenticatedJobsJobIdRoute: AuthenticatedJobsJobIdRoute,
+  AuthenticatedJobsIndexRoute: AuthenticatedJobsIndexRoute,
 }
 
 const AuthenticatedJobsRouteWithChildren =
