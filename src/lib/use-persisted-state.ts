@@ -25,3 +25,4 @@ export function usePersistedState<T>(key: string, initial: T) {
 
   return [value, setValue, () => window.localStorage.removeItem(key)] as const;
 }
+
